@@ -13,7 +13,7 @@ public interface StudentService {
 	
 	Student get(String login);
 	
-	List<Student> findAllByGroup(Group group);
+	List<Student> findAllByGroup(String group);
 	
-	void delete(String login);
+	void delete(Student student);
 }

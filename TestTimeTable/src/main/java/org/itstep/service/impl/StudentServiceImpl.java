@@ -33,12 +33,12 @@ public class StudentServiceImpl implements StudentService {
 		return studentDao.getOne(login);
 	}
 
-	public List<Student> findAllByGroup(Group group) {
+	public List<Student> findAllByGroup(String group) {
 		return studentDao.findAllByGroup(group);
 	}
 
-	public void delete(String login) {
-		studentDao.delete(login);
+	public void delete(Student student) {
+		studentDao.delete(student);
 	}
 
 }
