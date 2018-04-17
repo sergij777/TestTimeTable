@@ -19,7 +19,7 @@ import lombok.Setter;
 @Table( name = "LESSONS" )
 public class Lesson {
 
-	private static final Long DURATION = 1000 * 60 * 90L;
+//	private static final Long DURATION = 1000 * 60 * 90L;
 	
 	@Id
 	@GeneratedValue( strategy = GenerationType.AUTO)
