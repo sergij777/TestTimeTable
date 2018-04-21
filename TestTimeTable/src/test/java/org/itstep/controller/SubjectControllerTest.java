@@ -6,10 +6,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.itstep.ApplicationRunner;
-import org.itstep.model.Lesson;
 import org.itstep.model.Subject;
-import org.itstep.service.LessonService;
-import org.junit.Ignore;
+import org.itstep.model.Teacher;
+import org.itstep.service.SubjectService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -28,42 +27,46 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = ApplicationRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
-public class LessonControllerTest {
+public class SubjectControllerTest {
 
+ @MockBean
+ SubjectService subjectService;
+ 
  @Autowired
  TestRestTemplate restTemplate;
  
- @MockBean
- LessonService lessonService;
- 
- @Ignore
  @Test
- public void testSave() throws URISyntaxException {
-  Lesson lesson = new Lesson();
+ public void testSave() {
   
   Subject subject = new Subject();
   subject.setName("Java");
   
-  lesson.setSubject(subject);
+  Mockito.when(subjectService.save(Mockito.any(Subject.class))).thenReturn(subject);
   
+  RequestEntity<Subject> request = null;
+  try {
+   request = new RequestEntity<Subject>(subject, HttpMethod.POST, new URI("/subject"));
+  } catch (URISyntaxException e) {
+   e.printStackTrace();
+  }
   
-  Mockito.when(lessonService.save(Mockito.any(Lesson.class))).thenReturn(lesson);
-  RequestEntity<Lesson> request = new RequestEntity<Lesson>(lesson, HttpMethod.POST, new URI("/lesson"));
-  ResponseEntity<Lesson> response = restTemplate.exchange(request, Lesson.class);
+  ResponseEntity<Subject> response = restTemplate.exchange(request, Subject.class);
   
-  assertEquals(HttpStatus.OK, response.getStatusCode()); 
-  assertEquals("Java", response.getBody().getSubject().getName());
+  assertEquals(HttpStatus.OK, response.getStatusCode());
   
-  Mockito.verify(lessonService , Mockito.times(1)).save(Mockito.any(Lesson.class));
+  Mockito.verify(subjectService, Mockito.times(1)).save(Mockito.any(Subject.class));
  }
 
- 
  @Test
  public void testUpdate() {
  }
 
  @Test
  public void testGetOne() {
+ }
+
+ @Test
+ public void testDelete() {
  }
 
 }

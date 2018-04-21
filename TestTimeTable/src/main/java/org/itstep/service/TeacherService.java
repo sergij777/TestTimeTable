@@ -13,7 +13,7 @@ public interface TeacherService {
 	
 	Teacher get(String login);
 	
-	List<Teacher> findAllBySubject(Subject subject);
+	List<Teacher> findAllBySubject(String subject);
 	
 	void delete(String login);
 }

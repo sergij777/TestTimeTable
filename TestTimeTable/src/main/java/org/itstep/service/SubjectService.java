@@ -1,4 +1,4 @@
-package org.itstep.service.impl;
+package org.itstep.service;
 
 import org.itstep.model.Subject;
 
