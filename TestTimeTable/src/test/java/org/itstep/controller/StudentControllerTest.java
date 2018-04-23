@@ -9,8 +9,9 @@ import java.util.List;
 
 import org.itstep.ApplicationRunner;
 import org.itstep.model.Subject;
-import org.itstep.model.Teacher;
-import org.itstep.service.TeacherService;
+import org.itstep.model.Group;
+import org.itstep.model.Student;
+import org.itstep.service.StudentService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,99 +32,98 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = ApplicationRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class TeacherControllerTest {
+public class StudentControllerTest {
 
  @MockBean
- TeacherService teacherService;
+ StudentService studentService;
 
  @Autowired
  TestRestTemplate restTemplate;
 
- private List<Teacher> teachers;
+ private List<Student> students;
  private Subject subject;
 
  @Before
  public void setUp() throws Exception {
-  teachers = new ArrayList<Teacher>();
-  Subject subject = new Subject();
-  subject.setName("Java");
+  students = new ArrayList<Student>();
+  Group group = new Group(); 
   
   for (int i = 1; i <= 3; i++) {
-   Teacher teacher = new Teacher();
-   teacher.setLogin("teacher" + i);
-   teacher.setPassword("pass" + i);
-   teacher.setFirstName("firstName");
-   teacher.setSecondName("secondName");
-   teacher.setSubject(subject);
+   Student student = new Student();
+   student.setLogin("student" + i);
+   student.setPassword("pass" + i);
+   student.setFirstName("firstName");
+   student.setSecondName("secondName");
+   student.setGroup(group);
    
-   teachers.add(teacher);
+   students.add(student);
   }
  }
 
  @Test
  public void testSave() throws URISyntaxException {
-  Mockito.when(teacherService.save(Mockito.any(Teacher.class))).thenReturn(teachers.get(0));
+  Mockito.when(studentService.save(Mockito.any(Student.class))).thenReturn(students.get(0));
 
-  RequestEntity<Teacher> request = new RequestEntity<Teacher>(teachers.get(0), HttpMethod.POST, new URI("/teacher"));
+  RequestEntity<Student> request = new RequestEntity<Student>(students.get(0), HttpMethod.POST, new URI("/student"));
 
-  ResponseEntity<Teacher> response = restTemplate.exchange(request, Teacher.class);
+  ResponseEntity<Student> response = restTemplate.exchange(request, Student.class);
   assertEquals(HttpStatus.OK, response.getStatusCode());
 
-  Mockito.verify(teacherService, Mockito.times(1)).save(Mockito.any(Teacher.class));
+  Mockito.verify(studentService, Mockito.times(1)).save(Mockito.any(Student.class));
  }
 
  @Test
  public void testUpdate() throws URISyntaxException {
-  Mockito.when(teacherService.update(Mockito.any(Teacher.class))).thenReturn(teachers.get(0));
+  Mockito.when(studentService.update(Mockito.any(Student.class))).thenReturn(students.get(0));
 
-  RequestEntity<Teacher> request = new RequestEntity<Teacher>(teachers.get(0), HttpMethod.PUT, new URI("/teacher"));
+  RequestEntity<Student> request = new RequestEntity<Student>(students.get(0), HttpMethod.PUT, new URI("/student"));
 
-  ResponseEntity<Teacher> response = restTemplate.exchange(request, Teacher.class);
+  ResponseEntity<Student> response = restTemplate.exchange(request, Student.class);
   assertEquals(HttpStatus.OK, response.getStatusCode());
 
-  Mockito.verify(teacherService, Mockito.times(1)).update(Mockito.any(Teacher.class));
+  Mockito.verify(studentService, Mockito.times(1)).update(Mockito.any(Student.class));
  }
 
  @Test
  public void testGetOne() throws URISyntaxException {
-  Mockito.when(teacherService.get(Mockito.anyString())).thenReturn(teachers.get(0));
+  Mockito.when(studentService.get(Mockito.anyString())).thenReturn(students.get(0));
 
   HttpHeaders headers = new HttpHeaders();
-  headers.add("login", "teacher1");
+  headers.add("login", "student1");
   
-  RequestEntity request = new RequestEntity(headers, HttpMethod.GET, new URI("/teacher/get-one"));
-  ResponseEntity<Teacher> response = restTemplate.exchange(request, Teacher.class);
+  RequestEntity request = new RequestEntity(headers, HttpMethod.GET, new URI("/student/get-one"));
+  ResponseEntity<Student> response = restTemplate.exchange(request, Student.class);
   
   assertEquals(HttpStatus.OK, response.getStatusCode());
-  Mockito.verify(teacherService, Mockito.times(1)).get(Mockito.anyString());
+  Mockito.verify(studentService, Mockito.times(1)).get(Mockito.anyString());
  }
 
  @Test
- public void testFindAllBySubject() throws URISyntaxException {
-  Mockito.when(teacherService.findAllBySubject(Mockito.anyString())).thenReturn(teachers);
+ public void testFindAllByGroup() throws URISyntaxException {
+  Mockito.when(studentService.findAllByGroup(Mockito.anyString())).thenReturn(students);
   
   HttpHeaders headers = new HttpHeaders();
   headers.add("name", "Java");
   
-  RequestEntity request = new RequestEntity(headers, HttpMethod.GET, new URI("/teacher/get-by-subject"));
+  RequestEntity request = new RequestEntity(headers, HttpMethod.GET, new URI("/student/get-by-group"));
   ResponseEntity<List> response = restTemplate.exchange(request, List.class);
   
   assertEquals(HttpStatus.OK, response.getStatusCode());
-  Mockito.verify(teacherService, Mockito.times(1)).findAllBySubject(Mockito.anyString());
+  Mockito.verify(studentService, Mockito.times(1)).findAllByGroup(Mockito.anyString());
   
   assertEquals(3, response.getBody().size());  
  }
 
  @Test
  public void testDelete() throws URISyntaxException {
-  Mockito.doNothing().when(teacherService).delete(Mockito.any(Teacher.class));
+  Mockito.doNothing().when(studentService).delete(Mockito.any(Student.class));
   
-  RequestEntity<Teacher> request = new RequestEntity<Teacher>(teachers.get(0), HttpMethod.DELETE, new URI("/teacher"));
+  RequestEntity<Student> request = new RequestEntity<Student>(students.get(0), HttpMethod.DELETE, new URI("/student"));
 
   ResponseEntity<HttpStatus> response = restTemplate.exchange(request, HttpStatus.class);
   assertEquals(HttpStatus.OK, response.getStatusCode());
 
-  Mockito.verify(teacherService, Mockito.times(1)).delete(Mockito.any(Teacher.class));
+  Mockito.verify(studentService, Mockito.times(1)).delete(Mockito.any(Student.class));
  }
 
 }

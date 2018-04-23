@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -42,8 +43,8 @@ public class SubjectController {
   return new ResponseEntity(HttpStatus.BAD_REQUEST);
  }
 
- @GetMapping(produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
- ResponseEntity<Subject> getOne(@RequestBody String name) {
+ @GetMapping(consumes = { MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+ ResponseEntity<Subject> getOne(@RequestHeader String name) {
   Subject subject = subjectService.get(name);
   if (subject != null) {
    return new ResponseEntity<Subject>(subject, HttpStatus.OK);
@@ -54,7 +55,7 @@ public class SubjectController {
  @DeleteMapping (consumes = { MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.TEXT_PLAIN_VALUE })
  ResponseEntity delete(@RequestBody Subject subject) {
   subjectService.delete(subject);
-  return new ResponseEntity(HttpStatus.BAD_REQUEST);
+  return new ResponseEntity(HttpStatus.OK);
  }
 
 }
