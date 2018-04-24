@@ -28,7 +28,6 @@ public class TeacherServiceTest {
 	@MockBean
 	TeacherDAO teacherDao;
 	
-	@Ignore
 	@Test
 	public void testFindAllBySubject() {
 		

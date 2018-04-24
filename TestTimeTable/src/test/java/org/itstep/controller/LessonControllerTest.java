@@ -52,15 +52,15 @@ public class LessonControllerTest {
   Subject subject = new Subject();
   Teacher teacher = new Teacher();
   Group group = new Group();
-  
+
   for (int i = 1; i <= 3; i++) {
-	   Lesson lesson = new Lesson();
-	   lesson.setSubject(subject);
-	   lesson.setTeacher(teacher);
-	   lesson.setCabinet("111");
-	   lesson.setGroup(group);
-	   lesson.setStartTime((long) 45 * i);
-   
+   Lesson lesson = new Lesson();
+   lesson.setSubject(subject);
+   lesson.setTeacher(teacher);
+   lesson.setCabinet("111");
+   lesson.setGroup(group);
+   lesson.setStartTime((long) 45 * i);
+
    lessons.add(lesson);
   }
  }
@@ -95,35 +95,37 @@ public class LessonControllerTest {
 
   HttpHeaders headers = new HttpHeaders();
   headers.add("id", "1");
-  
+
   RequestEntity request = new RequestEntity(headers, HttpMethod.GET, new URI("/lesson/get-one"));
   ResponseEntity<Lesson> response = restTemplate.exchange(request, Lesson.class);
-  
+
   assertEquals(HttpStatus.OK, response.getStatusCode());
   Mockito.verify(lessonService, Mockito.times(1)).get(Mockito.anyInt());
  }
 
-// @Test
-// public void testFindAllByPeriod() throws URISyntaxException {
-//  Mockito.when(lessonService.findAllByPeriod(Mockito.any(1L, 200L).thenReturn(lessons);
-//  
-//  HttpHeaders headers = new HttpHeaders();
-//  headers.add("name", "Java");
-//  
-//  RequestEntity request = new RequestEntity(headers, HttpMethod.GET, new URI("/lesson/get-by-period"));
-//  ResponseEntity<List> response = restTemplate.exchange(request, List.class);
-//  
-//  assertEquals(HttpStatus.OK, response.getStatusCode());
-//  Mockito.verify(lessonService, Mockito.times(1)).findAllByPeriod(Mockito.anyString());
-//  
-//  assertEquals(3, response.getBody().size());  
-// }
+ @Test
+ public void testFindAllByPeriod() throws URISyntaxException {
+  Mockito.when(lessonService.findAllByStartTime(Mockito.anyLong(), Mockito.anyLong())).thenReturn(lessons);
+
+  HttpHeaders headers = new HttpHeaders();
+  headers.add("start", "123456789");
+  headers.add("end", "123654987");
+
+  RequestEntity request = new RequestEntity(headers, HttpMethod.GET, new URI("/lesson/get-by-period"));
+  ResponseEntity<List> response = restTemplate.exchange(request, List.class);
+
+  assertEquals(HttpStatus.OK, response.getStatusCode());
+  Mockito.verify(lessonService, Mockito.times(1)).findAllByStartTime(Mockito.anyLong(), Mockito.anyLong());
+
+  assertEquals(3, response.getBody().size());
+ }
 
  @Test
  public void testDelete() throws URISyntaxException {
   Mockito.doNothing().when(lessonService).delete(Mockito.any(Lesson.class));
-  
-  RequestEntity<Lesson> request = new RequestEntity<Lesson>(lessons.get(0), HttpMethod.DELETE, new URI("/lesson"));
+
+  RequestEntity<Lesson> request = new RequestEntity<Lesson>(lessons.get(0), HttpMethod.DELETE,
+    new URI("/lesson"));
 
   ResponseEntity<HttpStatus> response = restTemplate.exchange(request, HttpStatus.class);
   assertEquals(HttpStatus.OK, response.getStatusCode());

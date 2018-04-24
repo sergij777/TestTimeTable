@@ -47,6 +47,7 @@ public class StudentControllerTest {
  public void setUp() throws Exception {
   students = new ArrayList<Student>();
   Group group = new Group(); 
+  group.setName("ST21");
   
   for (int i = 1; i <= 3; i++) {
    Student student = new Student();
@@ -103,7 +104,7 @@ public class StudentControllerTest {
   Mockito.when(studentService.findAllByGroup(Mockito.anyString())).thenReturn(students);
   
   HttpHeaders headers = new HttpHeaders();
-  headers.add("name", "Java");
+  headers.add("name", "ST21");
   
   RequestEntity request = new RequestEntity(headers, HttpMethod.GET, new URI("/student/get-by-group"));
   ResponseEntity<List> response = restTemplate.exchange(request, List.class);
